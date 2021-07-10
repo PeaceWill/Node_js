@@ -1,22 +1,18 @@
 
 const Course = require('../models/Course');
+const { MultiMongoostToObject } = require('../../util/mongose.help')
 
 class SiteController {
 
     /** 
      * GET /
     */
-    index(req, res) {
-
-        Course.find({}, (err, courses) => {
-            if (!err) return res.json(courses);
-            return res.status(400).json({error: "Error"});
-        })       
-        
+    index(req, res, next) {      
         Course.find({})
-            .then(courses => res.json(courses))
-            .catch(error => console.log(error));
-        // res.render('home')
+            .then(courses => {
+                res.render('home', {courses: MultiMongoostToObject(courses)})
+            })
+            .catch(next);
     }
 
     /** 
