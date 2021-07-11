@@ -1,6 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const exphbs = require("express-handlebars");
+const methodOverride = require('method-override');
 const path = require("path");
 
 const route = require("./routes");
@@ -19,6 +20,7 @@ app.use(
     })
 );
 app.use(express.json());
+app.use(methodOverride('_method'));
 // app.use(morgan('combined'))
 
 // Temp plate engine

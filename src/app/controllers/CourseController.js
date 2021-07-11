@@ -13,6 +13,44 @@ class CourseController {
             })
             .catch(next);
     }
+
+    /** 
+     *  GET /courses/create
+    */
+    create(req, res, next) {
+        res.render('courses/create');
+    }
+
+    /** 
+     *  GET /courses/id/edit
+    */
+   edit(req, res, next) {
+        Course.findById(req.params.id)
+            .then(course => res.render('courses/edit', { course: mongooseToObject(course) }))
+            .catch(next)
+    }
+
+    /** 
+     *  POST /courses/storeCourse
+    */
+    storeCourse(req, res, next) {
+        const formData = req.body;
+        formData.imageURL = `https://img.youtube.com/vi/${req.body.videoID}/sddefault.jpg`;
+        const course = new Course(formData);
+        course.save()
+            .then(() => res.redirect('/'));
+    }
+
+    /** 
+     *  PUT /courses/id
+    */
+    updateCourse(req, res, next) {
+        const formData = req.body;
+        formData.imageURL = `https://img.youtube.com/vi/${req.body.videoID}/sddefault.jpg`
+        Course.updateOne({ _id: req.params.id }, formData)
+            .then(() => res.redirect('/me/stored/courses'))
+            .catch(next)
+    }
 }
 
 module.exports = new CourseController;
