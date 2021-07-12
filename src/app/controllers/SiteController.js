@@ -8,7 +8,7 @@ class SiteController {
      * GET /
     */
     index(req, res, next) {      
-        Course.find({})
+        Course.find({ deletedAt: null})
             .then(courses => {
                 res.render('home', {courses: MultiMongoostToObject(courses)})
             })

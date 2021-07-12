@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "install": "^0.13.0",
+    "mongoose-delete": "^0.5.3",
     "mongoose-slug-generator": "^1.0.4",
     "morgan": "^1.10.0",
     "node-sass": "^6.0.1",

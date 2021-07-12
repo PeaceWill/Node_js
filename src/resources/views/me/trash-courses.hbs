@@ -1,6 +1,5 @@
 <div class="mt-4">
-    <h3>Khóa học của tôi</h3>
-    <a href="/me/trash/courses">Thùng rác</a>
+    <h3>Khóa học đã xóa</h3>
     <table class="table mt-4">
         <thead>
             <tr>
@@ -19,25 +18,24 @@
                     <td>{{this.description}}</td>
                     <td>{{this.createdAt}}</td>
                     <td>
-                        <a
-                            href="/courses/{{this._id}}/edit"
-                            type="button"
-                            class="btn btn-info"
-                        >Update</a>
                         <button
                             type="button"
-                            class="btn btn-danger"
-                            data-toggle="modal"
-                            data-target="#confirm-delete"
+                            class="btn btn-info btn-restore"
                             data-id="{{this._id}}"
-                        >Delete</button>
+                        >Restore</button>
+                        <button
+                            type="button"
+                            class="btn btn-danger btn-remove"
+                            data-toggle="modal"
+                            data-target="#confirm-remove"
+                            data-id="{{this._id}}"
+                        >Remove</button>
                     </td>
                 </tr>
             {{else}}
             <tr>
                 <td colspan="5" class="text-center">
-                    Chưa có khóa học nào
-                    <a href="/courses/create">Đăng khóa học</a>
+                    Thùng rác trống
                 </td>
             </tr>
             {{/each}}
@@ -45,7 +43,7 @@
     </table>
 </div>
 
-<div class="modal" id="confirm-delete" tabindex="-1" role="dialog">
+<div class="modal" id="confirm-remove" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -60,11 +58,11 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p>Bạn muốn xóa khóa học</p>
+                <p>Xóa khóa học khỏi thùng rác</p>
             </div>
             <div class="modal-footer">
                 <button
-                    id="delete-action"
+                    id="remove-action"
                     type="button" 
                     class="btn btn-danger"
                 >Xóa</button>
@@ -79,22 +77,30 @@
 </div>
 
 {{!-- Delete form --}}
-<form method="POST" name="delete-form">
-</form>
+<form method="POST" name="restore-form"></form>
+
+<form method="POST" name="remove-form"></form>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() { 
-        var id;
-        $('#confirm-delete').on('show.bs.modal', function (event) { 
-            var button = $(event.relatedTarget); 
-            id = button.data('id');
-        }); 
+        const restoreButtons = $('.btn-restore');
+        restoreButtons.click(function(e) {
+            const courseID = $(this).data('id');
+            const formRestore = document.forms['restore-form'];
+            formRestore.action = `/courses/${courseID}?_method=PATCH`;
+            formRestore.submit();
+        });
 
-        const btnDeleteAction = document.getElementById('delete-action');
-        const deleteForm = document.forms['delete-form'];
-        btnDeleteAction.onclick = () => {
-            deleteForm.action = `/courses/${id}?_method=DELETE`;
-            deleteForm.submit();
-        } 
+        var courseID;
+        $('#confirm-remove').on('show.bs.modal', function (event) { 
+            var button = $(event.relatedTarget); 
+            courseID = button.data('id');
+        }); 
+        const removeActionButton = document.getElementById('remove-action');
+        const formRemove = document.forms['remove-form'];
+        removeActionButton.onclick = () => {
+            formRemove.action = `/courses/${courseID}/remove?_method=DELETE`;
+            formRemove.submit();
+        }
     });
 </script>
