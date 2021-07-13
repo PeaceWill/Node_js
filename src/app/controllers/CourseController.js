@@ -94,7 +94,7 @@ class CourseController {
         })
             .then(() => res.redirect("back"))
             .catch(next);
-    }
+    } 
 }
 
 module.exports = new CourseController();
