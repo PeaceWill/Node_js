@@ -7,9 +7,12 @@ class MeController {
      *  GET /me/store/courses
     */
    index(req, res, next) {
-        Course.find()
-            .then(courses => res.render('me/stored-courses', {courses: MultiMongoostToObject(courses) }))
-            .catch(next);
+
+        Promise.all([Course.find({}), Course.countDocumentsDeleted()])
+            .then(([courses, documentsDeleted]) => {
+                res.render('me/stored-courses', {courses: MultiMongoostToObject(courses), documentsDeleted });
+            })
+            .catch(next)
    }
 
    /** 
